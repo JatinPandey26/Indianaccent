@@ -1,54 +1,57 @@
 function displayOptions(element) {
   let q = document.querySelector(".optionsbar");
   if (element.name == "close-outline") {
-    q.classList.add("translate-y-[-5rem]");
+    q.classList.add("translate-y-[-10rem]");
     element.name = "reorder-four-outline";
   } else {
     element.name = "close-outline";
-    q.classList.remove("translate-y-[-5rem]");
+    q.classList.remove("translate-y-[-10rem]");
   }
 }
 
-const slidecontainer = document.querySelector(".slidercontainer");
-const images = document.querySelectorAll(".slidercontainer img");
+let imagesContainer = document.getElementById('imagesContainer');
+let gallerySlider = document.getElementById('gallerySlider');
+let imagesArray = document.querySelectorAll('#gallerySlider img');
+console.log(imagesArray)
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
 
-//buttons
-const prebtn = document.querySelector("#prevbtn");
-const nexbtn = document.querySelector("#nextbtn");
-
-//counter
 let counter = 1;
-const imgsize = images[0].clientWidth;
+let size = gallerySlider.clientWidth;
 
-slidecontainer.style.transform = 'translateX(' + ( -imgsize * counter )+ 'px)';
+imagesContainer.style.transform = 'translateX(' + (-size*counter) + 'px)';
 
-nexbtn.addEventListener("click", () => {
+nextBtn.addEventListener('click',()=>{
+    if(counter >= imagesArray.length-1) return;
+    imagesContainer.style.transition = "transform 0.4s ease-in-out";
+    counter++;
+    imagesContainer.style.transform = 'translateX(' + (-size*counter) + 'px)';
+})
 
-slidecontainer.style.transition = "transform 0.4s ease-in-out";
-counter++;
-slidecontainer.style.transform = 'translateX(' + (-imgsize * counter) + 'px)';
+prevBtn.addEventListener('click',()=>{
+    if(counter <= 0) return;
+    imagesContainer.style.transition = "transform 0.4s ease-in-out";
+    counter--;
+    imagesContainer.style.transform = 'translateX(' + (-size*counter) + 'px)';
+})
 
-});
+imagesContainer.addEventListener('transitionend',()=>{
+    if(imagesArray[counter].id == 'lastclone'){
+        console.log('last');
+        imagesContainer.style.transition = 'none'
+        counter = imagesArray.length - 2;
+        imagesContainer.style.transform = 'translateX(' + (-size*counter) + 'px)';
+    }
 
+    if(imagesArray[counter].id == 'firstclone'){
+        console.log('last');
+        imagesContainer.style.transition = 'none'
+        counter = imagesArray.length-counter;
+        imagesContainer.style.transform = 'translateX(' + (-size*counter) + 'px)';
+    }
 
-prebtn.addEventListener("click", () => {
-  console.log('hemlo');
-  slidecontainer.style.transition = "transform 0.4s ease-in-out";
-  counter--;
-  slidecontainer.style.transform = 'translateX('+ (-imgsize * counter) + 'px)';
-  });
-  
-slidecontainer.addEventListener('transitionend',()=>{
-  console.log('sfgyasgj');
-  if(images[counter].id === 'lastimgclone'){
-    slidecontainer.style.transition = "none";
-    counter = images.length-2;
-    slidecontainer.style.transform = 'translateX('+ (-imgsize * counter) + 'px)';
-  }
+})
 
-  if(images[counter].id === 'firstimgclone'){
-    slidecontainer.style.transition = "none";
-    counter = images.length-counter;
-    slidecontainer.style.transform = 'translateX('+ (-imgsize * counter) + 'px)';
-  }
+window.addEventListener('resize',()=>{
+    location.reload();
 })
